@@ -1,5 +1,10 @@
 package projecteuler.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class StringMath {
 	
 	public static final String ZERO = "0";
@@ -77,6 +82,81 @@ public class StringMath {
         }
 
         return Utils.removeFirst(result, '0');
+    }
+    
+    public static Map<String, Integer> map = new HashMap<>();
+    public static int getValue(int i, int j, String a, String b) {
+    	
+    	Integer value = map.get(i+":"+j);
+    	if(value == null) {
+    		value = (Utils.intFromChar(a.charAt(j)) * Utils.intFromChar(b.charAt(i)));
+    		map.put(i+":"+j, value);
+    	}
+    	return value;
+    }
+    
+    public static String multiplyJ(String a, String b) {
+    	
+    	int sum;
+    	int temp;
+    	int zeros = 0;
+    	int cols = a.length();
+    	int rows = b.length();    	
+    	//int[][] matrix = new int[rows][cols];
+    	
+    	String strSum = "0";
+    	
+    	/*for(int i=0; i<rows; i++) {
+    		for(int j=0; j<cols; j++) {
+    			matrix[i][j] = Utils.intFromChar(a.charAt(j)) * Utils.intFromChar(b.charAt(i));
+    		}
+    	}*/
+    	List<Integer> list = new ArrayList<>();
+    	
+    	for(int j=cols-1; j>=0; j--) {    		
+    		sum = 0;
+    		temp = j;
+    		for(int i=rows-1; i>=0; i--) {
+    			//sum += matrix[i][temp];  
+    			sum += getValue(i, temp, a, b);
+    			if(temp < cols-1) temp ++;
+    			else break;
+    		}
+    		list.add(sum);
+    		//strSum01 = StringMath.add(strSum01, sum + Utils.zeros(zeros01++));
+    		
+    		sum = 0;
+    		temp = j;
+    		for(int i=0; i<rows; i++) {
+    			//sum += matrix[i][temp];
+    			sum += getValue(i, temp, a, b);
+    			if(temp > 0) temp--;
+    			else break;
+    			
+    		}
+    		list.add(sum);
+    		//strSum02 = StringMath.add(strSum02, sum + Utils.zeros(zeros02++));
+    	}
+    	
+    	
+    	for(int i = 0; i< list.size(); i++) {
+    		strSum = add(strSum, i + Utils.zeros(i));
+    	}
+    	
+/*    	for(int j=cols-1; j>=0; j--) {    		
+    		sum = 0;
+    		temp = j;
+    		for(int i=0; i<rows; i++) {
+    			//sum += matrix[i][temp];
+    			sum += getValue(i, temp, a, b);
+    			if(temp > 0) temp--;
+    			else break;
+    			
+    		}
+    		strSum = StringMath.add(strSum, sum + Utils.zeros(zeros++));
+    	}*/
+    	
+    	return strSum;
     }
 	
     public static String multiply(String a, String b)
